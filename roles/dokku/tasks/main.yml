@@ -1,0 +1,23 @@
+- name: ensure directory
+  file: path=/root/Cloud state=directory
+
+- name: download dokku
+  get_url:
+    url: https://raw.githubusercontent.com/dokku/dokku/{{dokku_version}}/bootstrap.sh
+    dest: /root/Cloud/bootstrap-{{dokku_version}}.sh
+  register: bootstrap
+
+- name: debconf settings
+  shell: 'echo "dokku {{ item }}" | debconf-set-selections'
+  with_items:
+    - "dokku/web_config boolean false"
+    - "dokku/vhost_enable boolean true"
+    - "dokku/hostname string iad.zhdk.ch"
+    - "dokku/key_file string /root/.ssh/authorized_keys"
+  when: bootstrap.changed
+
+- name: install dokku
+  command: bash /root/Cloud/bootstrap-{{dokku_version}}.sh
+  environment:
+    DOKKU_TAG: "{{dokku_version}}"
+  when: bootstrap.changed

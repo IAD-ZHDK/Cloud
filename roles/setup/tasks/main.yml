@@ -1,0 +1,22 @@
+---
+- name: apt
+  sudo: true
+  apt: update_cache=yes
+
+- name: ntp
+  sudo: true
+  apt: name=ntp state=latest
+
+- name: htop
+  sudo: true
+  apt: name=htop state=latest
+
+- name: hostname
+  sudo: true
+  hostname: name={{inventory_hostname}}
+
+- name: enable firewall
+  ufw: state=enabled policy=reject
+
+- name: allow ssh
+  ufw: rule=allow port=22

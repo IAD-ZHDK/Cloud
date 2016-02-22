@@ -1,0 +1,7 @@
+- name: create app
+  shell: dokku apps:create wiki
+  args:
+    creates: /home/dokku/wiki
+
+- name: set config
+  shell: dokku config:set wiki USERNAME={{wiki_user}} PASSWORD={{wiki_password}} BASE_URL={{wiki_base}}

@@ -13,7 +13,7 @@
     - "dokku/web_config boolean false"
     - "dokku/vhost_enable boolean true"
     - "dokku/hostname string iad.zhdk.ch"
-    - "dokku/key_file string /root/.ssh/authorized_keys"
+    - "dokku/key_file string /root/.ssh/authorized_keys" # the key must be cleaned of comments
   when: bootstrap.changed
 
 - name: install dokku

@@ -2,6 +2,11 @@
 
 **ansible playbooks for cloud.iad.zhdk.ch**
 
+## Stack
+
+- [dokku](http://dokku.viewdocs.io/dokku/)
+- [dokku-mongo](https://github.com/dokku/dokku-mongo)
+
 ## Secrets
 
 Secrets are stored in the `secrets.yml` file in the root of the repository.

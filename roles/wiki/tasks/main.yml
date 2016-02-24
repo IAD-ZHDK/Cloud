@@ -4,7 +4,10 @@
     creates: /home/dokku/wiki
 
 - name: set config
-  shell: dokku config:set wiki USERNAME={{wiki_user}} PASSWORD={{wiki_password}} BASE_URL={{wiki_base}} GIN_MODE=release
+  shell: dokku config:set --no-restart wiki USERNAME={{wiki_user}} PASSWORD={{wiki_password}} BASE_URL={{wiki_base}} GIN_MODE=release
 
 - name: set buildpack
-  shell: dokku config:set wiki GO15VENDOREXPERIMENT=1 BUILDPACK_URL=https://github.com/heroku/heroku-buildpack-go.git
+  shell: dokku config:set --no-restart wiki GO15VENDOREXPERIMENT=1 BUILDPACK_URL=https://github.com/heroku/heroku-buildpack-go.git
+
+- name: always restart
+  shell: dokku docker-options:add wiki deploy "--restart=always"

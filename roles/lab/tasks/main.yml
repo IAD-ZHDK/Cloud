@@ -30,4 +30,7 @@
   when: redis_db|failed
 
 - name: set config
-  shell: dokku config:set lab SHOP_NAME="IAD LAB" APP_HOST=lab.iad.zhdk.ch SMTP_USER={{lab_smtp_user}} SMTP_PASSWORD={{lab_smtp_password}} MAIL_SENDER=joel.gaehwiler@zhdk.ch PASSWORD_ADMIN={{lab_admin_password}} PASSWORD_TERMINAL={{lab_terminal_password}} FIRST_NOTIFICATION=60 NOTIFY_INTERVAL=30
+  shell: dokku config:set --no-restart lab SHOP_NAME="IAD LAB" APP_HOST=lab.iad.zhdk.ch SMTP_USER={{lab_smtp_user}} SMTP_PASSWORD={{lab_smtp_password}} MAIL_SENDER=joel.gaehwiler@zhdk.ch PASSWORD_ADMIN={{lab_admin_password}} PASSWORD_TERMINAL={{lab_terminal_password}} FIRST_NOTIFICATION=60 NOTIFY_INTERVAL=30
+
+- name: always restart
+  shell: dokku docker-options:add lab deploy "--restart=always"

@@ -1,11 +1,13 @@
-- name: ensure directory
-  file: path=/root/Cloud state=directory
+- name: check dokku availability
+  shell: which dokku| grep dokku
+  ignore_errors: true
+  register: dokku
 
-- name: download dokku
+- name: download bootstrap script
   get_url:
     url: https://raw.githubusercontent.com/dokku/dokku/{{dokku_version}}/bootstrap.sh
-    dest: /root/Cloud/bootstrap-{{dokku_version}}.sh
-  register: bootstrap
+    dest: /root/bootstrap.sh
+  when: dokku|failed
 
 - name: debconf settings
   shell: 'echo "dokku {{ item }}" | debconf-set-selections'
@@ -14,13 +16,13 @@
     - "dokku/vhost_enable boolean true"
     - "dokku/hostname string iad.zhdk.ch"
     - "dokku/key_file string /root/.ssh/authorized_keys" # the key must be cleaned of comments
-  when: bootstrap.changed
+  when: dokku|failed
 
 - name: install dokku
-  command: bash /root/Cloud/bootstrap-{{dokku_version}}.sh
+  command: bash /root/bootstrap.sh
   environment:
     DOKKU_TAG: "{{dokku_version}}"
-  when: bootstrap.changed
+  when: dokku|failed
 
 - name: check mongo plugin availability
   shell: dokku plugin | grep mongo

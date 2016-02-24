@@ -1,0 +1,33 @@
+- name: create app
+  shell: dokku apps:create lab
+  args:
+    creates: /home/dokku/lab
+
+- name: check mongo db existence
+  shell: dokku mongo:list | grep lab-mongo
+  ignore_errors: true
+  register: mongo_db
+
+- name: check redis db existence
+  shell: dokku redis:list | grep lab-redis
+  ignore_errors: true
+  register: redis_db
+
+- name: create mongo db
+  shell: dokku mongo:create lab-mongo
+  when: mongo_db|failed
+
+- name: create redis db
+  shell: dokku redis:create lab-redis
+  when: redis_db|failed
+
+- name: link mongo db
+  shell: dokku mongo:link lab-mongo lab
+  when: mongo_db|failed
+
+- name: link redis db
+  shell: dokku redis:link lab-redis lab
+  when: redis_db|failed
+
+# - name: set config
+#   shell: dokku config:set lab

@@ -22,5 +22,23 @@
     DOKKU_TAG: "{{dokku_version}}"
   when: bootstrap.changed
 
+- name: check mongo plugin availability
+  shell: dokku plugin | grep mongo
+  ignore_errors: true
+  register: dokku_mongo
+
+- name: check redis plugin availability
+  shell: dokku plugin | grep redis
+  ignore_errors: true
+  register: dokku_redis
+
+- name: install mongo plugin
+  shell: dokku plugin:install https://github.com/dokku/dokku-mongo.git mongo
+  when: dokku_mongo|failed
+
+- name: install redis plugin
+  shell: dokku plugin:install https://github.com/dokku/dokku-redis.git redis
+  when: dokku_redis|failed
+
 - name: allow http
   ufw: rule=allow port=80 proto=tcp

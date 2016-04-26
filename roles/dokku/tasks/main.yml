@@ -11,6 +11,7 @@
 
 - name: clean key from comments
   shell: 'sed -i.bak "/^[[:blank:]]*#/d;s/#.*//" /root/.ssh/authorized_keys'
+  when: dokku|failed
 
 - name: debconf settings
   shell: 'echo "dokku {{ item }}" | debconf-set-selections'

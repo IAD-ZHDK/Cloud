@@ -1,5 +1,5 @@
 - name: check dokku availability
-  shell: which dokku| grep dokku
+  shell: which dokku | grep dokku
   ignore_errors: true
   register: dokku
 
@@ -9,13 +9,16 @@
     dest: /root/bootstrap.sh
   when: dokku|failed
 
+- name: clean key from comments
+  shell: 'sed -i.bak "/^[[:blank:]]*#/d;s/#.*//" /root/.ssh/authorized_keys'
+
 - name: debconf settings
   shell: 'echo "dokku {{ item }}" | debconf-set-selections'
   with_items:
     - "dokku/web_config boolean false"
     - "dokku/vhost_enable boolean true"
     - "dokku/hostname string iad.zhdk.ch"
-    - "dokku/key_file string /root/.ssh/authorized_keys" # the key must be cleaned of comments
+    - "dokku/key_file string /root/.ssh/authorized_keys"
   when: dokku|failed
 
 - name: install dokku

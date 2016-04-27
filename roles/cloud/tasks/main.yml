@@ -1,0 +1,23 @@
+- name: create app
+  shell: dokku apps:create cloud
+  args:
+    creates: /home/dokku/cloud
+
+- name: set config
+  shell: dokku config:set --no-restart cloud APP_URL=http://cloud.iad.zhdk.ch
+
+- name: always restart
+  shell: dokku docker-options:add cloud deploy "--restart=always"
+
+- name: check mongo db existence
+  shell: dokku mongo:list | grep cloud-mongo
+  ignore_errors: true
+  register: mongo_db
+
+- name: create mongo db
+  shell: dokku mongo:create cloud-mongo
+  when: mongo_db|failed
+
+- name: link mongo db
+  shell: dokku mongo:link cloud-mongo cloud
+  when: mongo_db|failed

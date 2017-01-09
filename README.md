@@ -6,6 +6,7 @@
 
 - [dokku](http://dokku.viewdocs.io/dokku/)
 - [dokku-mongo](https://github.com/dokku/dokku-mongo)
+- [dokku-redis](https://github.com/dokku/dokku-redis)
 
 ## Secrets
 
